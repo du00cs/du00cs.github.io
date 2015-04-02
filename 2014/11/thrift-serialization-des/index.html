@@ -1,0 +1,453 @@
+<!DOCTYPE HTML>
+
+    <html lang="zh-Hans">
+  
+<head>
+  <meta charset="utf-8">
+  
+  <title>Thrift序列化/反序列化方法对比 | Oh Captain, My Captain - Du00</title>
+  <meta name="author" content="Du00">
+  
+  <meta name="description" content="Du00的博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Thrift序列化/反序列化方法对比"/>
+  <meta property="og:site_name" content="Oh Captain, My Captain - Du00"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <meta http-equiv="Content-Language" content="zh-Hans"/>
+  
+
+  <link href="/img/favicon.png" rel="icon">
+  
+    <link rel="apple-touch-icon" href="/img/apple-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/apple-icon.png">
+    
+
+  <link rel="alternate" href="/atom.xml" title="Oh Captain, My Captain - Du00" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+  <style type="text/css">
+  /* Tim Pietrusky advanced checkbox hack (Android <= 4.1.2) */
+body{ -webkit-animation: bugfix infinite 1s; }
+@-webkit-keyframes bugfix { from {padding:0;} to {padding:0;} }
+
+  
+  <!-- Chinese readability improvements -->
+    article {font-weight: 400;letter-spacing: .01rem;}
+    article .entry{line-height:2;}
+  
+
+  
+    article .post-content-index .entry{ overflow:hidden;}
+  
+</style>
+
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56718947-1', 'auto');
+  ga('send', 'pageview');
+ 
+</script>
+
+
+
+
+  
+    <!-- 360 Font and Baidu CDN in China -->
+    
+      <link href='http://fonts.useso.com/css?family=Open+Sans:300,400|Playball' rel='stylesheet' type='text/css'>
+    
+  <link href='http://apps.bdimg.com/libs/fontawesome/4.1.0/css/font-awesome.css' rel='stylesheet' type='text/css'>
+  <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+  
+
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="padding">
+	<div class="alignleft logo">
+	  <h1><a href="/">Oh Captain, My Captain - Du00</a></h1>
+	</div>
+	<nav id="main-nav" class="alignright">
+		<input type="checkbox" id="toggle" />
+		<label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu" onclick><i class="fa fa-bars"></i></label>
+	  <ul class="menu">
+	    
+	      <li><a href="/">Home</a></li>
+	    
+	      <li><a href="/archives">Archives</a></li>
+	    
+	    
+	  </ul>
+	</nav>
+	<div class="clearfix"></div>
+</div>
+</header>
+  <div id="page-heading-wrap">
+  	<div class="inner">
+      <div class="padding">
+    		
+          <h1>Thrift序列化/反序列化方法对比</h1>
+          <ul>
+            <li>
+              <span class="heading-span">Posted on: </span>
+              <time datetime="2014-11-20T12:00:52.000Z">2014-11-20</time>
+            </li>
+            
+              <li>
+                <span class="heading-span">By: </span>
+
+                
+                  <a href="/">Du00</a>
+                
+
+              </li>
+            
+            <li>
+              <span class="heading-span">With: </span>
+              
+
+                <a href="#ds-thread"><span class="ds-thread-count" data-thread-key="2014/11/thrift-serialization-des/" data-count-type="comments"></span></a>
+              
+            </li>
+          </ul>
+        
+      </div>
+  	</div>
+  </div>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper" class="padding"><article class="post">
+  
+  
+    <div class="post-content">
+  
+      
+      <div class="entry">
+        
+          <p>还记得最初到公司的时候thrift序列化还是用的JSON模式，现在想想效率还是太低了。先上结论部分</p>
+<h1 id="结论">结论</h1><p>Thrift提供了（至少）三种序列化方法，Json、Binary和Compact，三者之间性能差距还是比较大的。Json方式的选取往往不是基于效率的选择，下面是两种二进制模式Binary和Compact之间的比较：</p>
+<ol>
+<li>序列化：compact模式压缩节省19.3%的空间，耗时节省20.4%</li>
+<li>反序列化：compact模式耗时增加3.3%</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>方法</th>
+<th>长度</th>
+<th>耗时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>序列化</td>
+<td>binary</td>
+<td>26039</td>
+<td>16.433</td>
+</tr>
+<tr>
+<td></td>
+<td>compact</td>
+<td>21020</td>
+<td>13.085</td>
+</tr>
+<tr>
+<td></td>
+<td>json</td>
+<td>25096</td>
+<td>56.137</td>
+</tr>
+<tr>
+<td>反序列化</td>
+<td>binary</td>
+<td></td>
+<td>8.963</td>
+</tr>
+<tr>
+<td></td>
+<td>compact</td>
+<td></td>
+<td>9.257</td>
+</tr>
+<tr>
+<td></td>
+<td>json</td>
+<td></td>
+<td>61.511</td>
+</tr>
+</tbody>
+</table>
+<h1 id="测试用例">测试用例</h1><ol>
+<li>thrift定义<figure class="highlight thrift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">STestObject</span></span>&#123;</span><br><span class="line">     <span class="number">1</span>: <span class="built_in">i64</span> userId;  </span><br><span class="line">     <span class="number">2</span>: <span class="built_in">i64</span> timestamp;  </span><br><span class="line">     <span class="number">3</span>: <span class="stl_container">list&lt;<span class="keyword">string</span>&gt;</span> apps;  </span><br><span class="line">     <span class="number">4</span>: <span class="stl_container">list&lt;<span class="keyword">i32</span>&gt;</span> pos;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>填充数据的方法<br><figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">val</span> <span class="title">apps</span> =</span> <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">1000</span>) <span class="keyword">yield</span> <span class="string">"com.xiaomi.channel"</span></span><br><span class="line"><span class="function"><span class="keyword">val</span> <span class="title">pos</span> =</span> <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">1000</span>) <span class="keyword">yield</span> <span class="keyword">new</span> <span class="type">Integer</span>(<span class="number">100</span>)</span><br><span class="line"><span class="function"><span class="keyword">val</span> <span class="title">o</span> =</span> <span class="keyword">new</span> <span class="type">STestObject</span>(<span class="number">123123</span>, d.getMillis(), apps.toList.asJava, os.toList.asJava)</span><br></pre></td></tr></table></figure></p>
+<p>最后序列化，反序列化都是做100,000次</p>
+<p>具体的代码是Scala的，但是还是（完全）可以说明问题的。<br><figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> com.xiaomi.data.o2o.model.<span class="type">STestObject</span></span><br><span class="line"><span class="keyword">import</span> scala.collection.<span class="type">JavaConverters</span>._</span><br><span class="line"><span class="keyword">import</span> scala.collection.<span class="type">JavaConversions</span>._</span><br><span class="line"><span class="keyword">import</span> org.apache.thrift.<span class="type">TSerializer</span></span><br><span class="line"><span class="keyword">import</span> org.apache.thrift.protocol.<span class="type">TBinaryProtocol</span></span><br><span class="line"><span class="keyword">import</span> org.apache.thrift.protocol.<span class="type">TCompactProtocol</span></span><br><span class="line"><span class="keyword">import</span> org.apache.thrift.<span class="type">TDeserializer</span></span><br><span class="line"><span class="keyword">import</span> java.util.<span class="type">Date</span></span><br><span class="line"><span class="keyword">import</span> org.apache.thrift.protocol.<span class="type">TJSONProtocol</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * @author du00</span><br><span class="line"> *</span><br><span class="line"> */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">ThriftSerializationTest</span> &#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span>(</span>args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">d</span> =</span> <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">apps</span> =</span> <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">1000</span>) <span class="keyword">yield</span> <span class="string">"com.xiaomi.channel"</span></span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">pos</span> =</span> <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">1000</span>) <span class="keyword">yield</span> <span class="keyword">new</span> <span class="type">Integer</span>(<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">o</span> =</span> <span class="keyword">new</span> <span class="type">STestObject</span>(<span class="number">123123</span>, d.getTime(), apps.toList.asJava, pos.toList.asJava)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//binary</span></span><br><span class="line">    <span class="keyword">var</span> se = <span class="keyword">new</span> <span class="type">TSerializer</span>(<span class="keyword">new</span> <span class="type">TBinaryProtocol</span>.<span class="type">Factory</span>())</span><br><span class="line">    <span class="keyword">var</span> start = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">100000</span>) se.serialize(o)</span><br><span class="line">    <span class="keyword">var</span> stop = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">binary</span> =</span> se.serialize(o)</span><br><span class="line">    println(<span class="string">"binary"</span>, binary.length, (stop.getTime() - start.getTime()) / <span class="number">1000.0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//compact</span></span><br><span class="line">    se = <span class="keyword">new</span> <span class="type">TSerializer</span>(<span class="keyword">new</span> <span class="type">TCompactProtocol</span>.<span class="type">Factory</span>())</span><br><span class="line">    start = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">100000</span>) se.serialize(o)</span><br><span class="line">    stop = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">compact</span> =</span> se.serialize(o)</span><br><span class="line">    println(<span class="string">"compact"</span>, compact.length, (stop.getTime() - start.getTime()) / <span class="number">1000.0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//json</span></span><br><span class="line">    se = <span class="keyword">new</span> <span class="type">TSerializer</span>(<span class="keyword">new</span> <span class="type">TJSONProtocol</span>.<span class="type">Factory</span>())</span><br><span class="line">    start = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">100000</span>) se.serialize(o)</span><br><span class="line">    stop = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="function"><span class="keyword">val</span> <span class="title">json</span> =</span> se.serialize(o)</span><br><span class="line">    println(<span class="string">"json"</span>, json.length, (stop.getTime() - start.getTime()) / <span class="number">1000.0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//binary</span></span><br><span class="line">    <span class="keyword">var</span> de = <span class="keyword">new</span> <span class="type">TDeserializer</span>(<span class="keyword">new</span> <span class="type">TBinaryProtocol</span>.<span class="type">Factory</span>())</span><br><span class="line">    start = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">100000</span>) de.deserialize(o, binary)</span><br><span class="line">    stop = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    println(<span class="string">"binary"</span>, (stop.getTime() - start.getTime()) / <span class="number">1000.0</span>, o)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//compact</span></span><br><span class="line">    de = <span class="keyword">new</span> <span class="type">TDeserializer</span>(<span class="keyword">new</span> <span class="type">TCompactProtocol</span>.<span class="type">Factory</span>())</span><br><span class="line">    start = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">100000</span>) de.deserialize(o, compact)</span><br><span class="line">    stop = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    println(<span class="string">"compact"</span>, (stop.getTime() - start.getTime()) / <span class="number">1000.0</span>, o)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//json</span></span><br><span class="line">    de = <span class="keyword">new</span> <span class="type">TDeserializer</span>(<span class="keyword">new</span> <span class="type">TJSONProtocol</span>.<span class="type">Factory</span>())</span><br><span class="line">    start = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to <span class="number">100000</span>) de.deserialize(o, json)</span><br><span class="line">    stop = <span class="keyword">new</span> <span class="type">Date</span></span><br><span class="line">    println(<span class="string">"json"</span>, (stop.getTime() - start.getTime()) / <span class="number">1000.0</span>, o)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+      </div>
+      <footer>
+        
+          
+  
+  <div class="categories">
+    <a href="/categories/Java/">Java</a>
+  </div>
+
+          
+  
+  <div class="tags">
+    <a href="/tags/Java/">Java</a>, <a href="/tags/Scala/">Scala</a>
+  </div>
+
+          <div class="share">
+  
+
+    
+      <!-- JiaThis Button BEGIN -->
+      <div class="jiathis_style_24x24">
+        <a class="jiathis_button_qzone"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_tqq"></a>
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_renren"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+        </div>
+        <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js" charset="utf-8"></script>
+        <!-- JiaThis Button END -->
+    
+
+    
+
+    
+  
+</div>
+          
+<nav class="article-nav clearfix">
+ 
+ <div class="article-prev" >
+ <a href="/2014/11/hexo-github-pages-1/" title="利用GitHub搭建个人博客-工具准备(1)">
+  <i class="fa fa-long-arrow-left"></i>
+  <span>
+  利用GitHub搭建个人博客-工具准备(1)</span>
+</a>
+</div>
+
+
+<div class="article-next">
+<a href="/2014/11/coursera-func-scala/"  title="Functional Programming Principles in Scala - Week 1">
+ <span>Functional Programming Principles in Scala - Week 1
+</span>
+<i class="fa fa-long-arrow-right"></i>
+</a>
+</div>
+
+</nav>
+
+        
+        <div class="clearfix"></div>
+      </footer>
+    </div>
+</article>
+
+
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+
+     <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2014/11/thrift-serialization-des/" data-title="Thrift序列化/反序列化方法对比" data-url="http://du00cs.github.com2014/11/thrift-serialization-des/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"du00cs"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright"><div class="padding">
+	
+	  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:du00cs.github.com">
+  </form>
+</div>
+	
+	  
+<div class="widget recent-post">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/spark-map-mapvalues/">Spark学习——map &amp; mapValues</a>
+      </li>
+    
+      <li>
+        <a href="/2014/12/spark-tips-01/">Spark问题备忘</a>
+      </li>
+    
+      <li>
+        <a href="/2014/12/scala-tips-01/">Scala点点滴滴-JSON/正则/命令行解析</a>
+      </li>
+    
+      <li>
+        <a href="/2014/11/hexo-github-pages-3/">利用GitHub搭建个人博客-美化(3)</a>
+      </li>
+    
+      <li>
+        <a href="/2014/11/hexo-github-pages-2/">利用GitHub搭建个人博客-利其器(2)</a>
+      </li>
+    
+  </ul>
+</div>
+
+	
+	  
+<div class="widget category">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Java/">Java</a><small>1</small></li>
+  
+    <li><a href="/categories/Scala/">Scala</a><small>1</small></li>
+  
+    <li><a href="/categories/Spark/">Spark</a><small>3</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/杂谈/">杂谈</a><small>1</small></li>
+  
+    <li><a href="/categories/笔记/">笔记</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+	
+	  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  
+    <a href="/tags/Coursera/">Coursera<small>1</small></a>
+  
+    <a href="/tags/Java/">Java<small>1</small></a>
+  
+    <a href="/tags/Scala/">Scala<small>6</small></a>
+  
+    <a href="/tags/Spark/">Spark<small>3</small></a>
+  
+    <a href="/tags/hexo/">hexo<small>3</small></a>
+  
+    <a href="/tags/杂谈/">杂谈<small>1</small></a>
+  
+</div>
+
+	
+</div></aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="padding">
+	<div class="alignleft">
+	  
+	  &copy; 2015 Du00
+	  
+	  Powerd by <a href="http://hexo.io/" target="_blank">hexo</a>
+	  and Theme by <a href="https://github.com/halfer53/metro-light" target="_blank">metro-light</a>
+	</div>
+
+	<div class="alignright">
+		
+		
+			<a href="https://github.com/du00cs" target="_blank" title="Du00 Github"><i class="fa fa-github-square"></i></a>	
+		
+		
+		
+			<a href="http://www.weibo.com/du00cs" target="_blank" title="Du00 Weibo"><i class="fa fa-weibo"></i></a>	
+		
+		
+		
+		
+	</div>
+
+	<div class="clearfix"></div>
+</div>
+
+<div class="scroll-top"><i class="fa fa-arrow-circle-up"></i></div></footer>
+  
+
+ <script type="text/javascript">
+var duoshuoQuery = {short_name:"du00cs"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.0.4/jquery.imagesloaded.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<script type="text/javascript">
+$(window).scroll(function() {
+
+    if($(this).scrollTop() > 400) {
+        $('.scroll-top').fadeIn(200);
+    } else {
+        $('.scroll-top').fadeOut(200);
+    }
+});
+
+$('.scroll-top').bind('click', function(e) {
+    e.preventDefault();
+    $('body,html').animate({scrollTop:0},200);
+});
+</script>
+
+
+</body>
+</html>

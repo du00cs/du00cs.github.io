@@ -1,0 +1,416 @@
+<!DOCTYPE HTML>
+
+    <html lang="zh-Hans">
+  
+<head>
+  <meta charset="utf-8">
+  
+  <title>Spark问题备忘 | Oh Captain, My Captain - Du00</title>
+  <meta name="author" content="Du00">
+  
+  <meta name="description" content="Du00的博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Spark问题备忘"/>
+  <meta property="og:site_name" content="Oh Captain, My Captain - Du00"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <meta http-equiv="Content-Language" content="zh-Hans"/>
+  
+
+  <link href="/img/favicon.png" rel="icon">
+  
+    <link rel="apple-touch-icon" href="/img/apple-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/apple-icon.png">
+    
+
+  <link rel="alternate" href="/atom.xml" title="Oh Captain, My Captain - Du00" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+  <style type="text/css">
+  /* Tim Pietrusky advanced checkbox hack (Android <= 4.1.2) */
+body{ -webkit-animation: bugfix infinite 1s; }
+@-webkit-keyframes bugfix { from {padding:0;} to {padding:0;} }
+
+  
+  <!-- Chinese readability improvements -->
+    article {font-weight: 400;letter-spacing: .01rem;}
+    article .entry{line-height:2;}
+  
+
+  
+    article .post-content-index .entry{ overflow:hidden;}
+  
+</style>
+
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56718947-1', 'auto');
+  ga('send', 'pageview');
+ 
+</script>
+
+
+
+
+  
+    <!-- 360 Font and Baidu CDN in China -->
+    
+      <link href='http://fonts.useso.com/css?family=Open+Sans:300,400|Playball' rel='stylesheet' type='text/css'>
+    
+  <link href='http://apps.bdimg.com/libs/fontawesome/4.1.0/css/font-awesome.css' rel='stylesheet' type='text/css'>
+  <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+  
+
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="padding">
+	<div class="alignleft logo">
+	  <h1><a href="/">Oh Captain, My Captain - Du00</a></h1>
+	</div>
+	<nav id="main-nav" class="alignright">
+		<input type="checkbox" id="toggle" />
+		<label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu" onclick><i class="fa fa-bars"></i></label>
+	  <ul class="menu">
+	    
+	      <li><a href="/">Home</a></li>
+	    
+	      <li><a href="/archives">Archives</a></li>
+	    
+	    
+	  </ul>
+	</nav>
+	<div class="clearfix"></div>
+</div>
+</header>
+  <div id="page-heading-wrap">
+  	<div class="inner">
+      <div class="padding">
+    		
+          <h1>Spark问题备忘</h1>
+          <ul>
+            <li>
+              <span class="heading-span">Posted on: </span>
+              <time datetime="2014-12-12T09:46:00.000Z">2014-12-12</time>
+            </li>
+            
+              <li>
+                <span class="heading-span">By: </span>
+
+                
+                  <a href="/">Du00</a>
+                
+
+              </li>
+            
+            <li>
+              <span class="heading-span">With: </span>
+              
+
+                <a href="#ds-thread"><span class="ds-thread-count" data-thread-key="2014/12/spark-tips-01/" data-count-type="comments"></span></a>
+              
+            </li>
+          </ul>
+        
+      </div>
+  	</div>
+  </div>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper" class="padding"><article class="post">
+  
+  
+    <div class="post-content">
+  
+      
+      <div class="entry">
+        
+          <p>　　想当年被mapreduce虐得死去活来，换上Spark其实是接着虐，记录在此仅作备忘。</p>
+<h3 id="1-_Spark/Scala在Eclipse中的设置">1. Spark/Scala在Eclipse中的设置</h3><p>　　IntelliJ IDEA也有相应插件，在此不提。基于Eclipse的方案中可以安装ScalaIDE的插件，但还是建议使用ScalaIDE，而且是<a href="http://scala-ide.org/download/milestone.html" target="_blank" rel="external">Milestone</a>版本。IDE的新版本不同于硬件驱动，往往是添加了更好的新功能，不需要坚持用一个老版本，况且开源的东西对老版本的东西感觉好像不维护的样子。  </p>
+<p>　　scala工程在Eclipse中有一些基本上逃避不了的问题：  </p>
+<ol>
+<li>首先，<strong>怎么创建一个scala的maven工程？</strong><br>　　参考<a href="/2014/11/11/2014-11-11-spark-scala-introduction/">Spark/Scala的入门材料</a>，建一个新工程，在pom中配置scala的maven编译插件即可。</li>
+<li><strong>引入一个scala的maven工程后需要哪些设置？</strong><br>情况可能各有不同，一条一条对照检查即可：<ul>
+<li>未识别出工程为Scala工程(工程文件夹图标有M、J标记，没有S)——需要<strong>添加工程的Scala特性</strong><br><code>工程-&gt;右键-&gt;Configure-&gt;Add Scala Nature</code></li>
+<li>未能识别scala代码（没有变成java的package管理）——添加Scala代码路径为Source Folder<br>比如src/main/scala文件夹下有scala源文件——<code>scala代码文件夹-&gt; 右键 -&gt;Build Path -&gt; Use as Source Folder</code></li>
+<li>可能的兼容性问题：修改JDK兼容版本从1.5到1.6——<code>JRE System Library -&gt; 右键 -&gt; Properties -&gt; 选择Java SE-1.6</code>(比如thrift需要至少JDK1.6支持，如果没有飘红忽略亦可)</li>
+</ul>
+</li>
+<li><strong>Scala版本的依赖版本冲突</strong><br>　　在Problems的View中可能会有红色的错误提示说xx.jar是用2.10编译的，而你使用的是2.11，这时对着问题<code>ctrl+1或者右键-&gt; Quick Fix -&gt; 下拉Scala Installation选择相应版本（2.10)</code></li>
+<li><strong>IDE在Build workspace时缓慢、报内存不够</strong><br>　　调整最大内存分配。这个还是很有必要的，<code>菜单栏-&gt;Scala-&gt;Run Setup Diagnostics-&gt;选中Use recommended default settings</code>，如果Heap settings中的有1.5G以上就不用改了，如果有需要，修改eclipse.ini（去安装文件夹下找，把512m改成2048m）即可。</li>
+</ol>
+<h3 id="2-_org-apache-spark-SparkException:_Error_communicating_with_MapOutputTracker">2. org.apache.spark.SparkException: Error communicating with MapOutputTracker</h3><p>　　问题：少量数据可以运行成功，而数据量放大到数十倍之后运行失败并报这个错。下面是官方对<a href="http://spark.apache.org/docs/latest/configuration.html" target="_blank" rel="external">spark.akka.frameSize</a>这个参数的解释</p>
+<blockquote>
+<p>Maximum message size to allow in “control plane” communication (for serialized tasks and task results), in MB. Increase this if your tasks need to send back large results to the driver (e.g. using collect() on a large dataset).</p>
+</blockquote>
+<p>有了上面的解释就可以明白怎么去调整了：1. 对消息的大小限制放松，2.启用压缩</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">val</span> <span class="title">sparkConf</span> =</span> <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">  .setAppName(<span class="string">"Host Access Freq Stats"</span>)</span><br><span class="line">  .set(<span class="string">"spark.serializer"</span>, <span class="string">"org.apache.spark.serializer.KryoSerializer"</span>)</span><br><span class="line">  .set(<span class="string">"spark.akka.frameSize"</span>, <span class="string">"30"</span>); <span class="comment">//默认是10</span></span><br></pre></td></tr></table></figure>
+<p>如果这不能解决问题，可能就需要关注关注其它问题——比如文件块数是不是太多了(10,000+)？可以类似于reduceByKey的时候额外指定分区数：<br><figure class="highlight scala"><table><tr><td class="code"><pre><span class="line">rdd.reduceByKey(x =&gt; ???, <span class="number">80</span>)</span><br></pre></td></tr></table></figure></p>
+<p>文件块数多的时候调整调整分区数的大小也可以避免大量的10k/1M的小文件产生，小文件太多是会降低IO效率的。</p>
+<h3 id="3-_查看Accumulator/Counter">3. 查看Accumulator/Counter</h3><p>　　yarn-cluster模式启动的任务如果集群上配了有spark日志的web服务，是可以在任务执行时/结束后（没有专门的日志服务会临时起一个Spark UI，任务结束就没了）查看任务历史的。在Spark1.1之后“有名的”Accumulator可以在Spark Application UI上查看了——在UI上点击——Stages中子任务的Description，在Accumulators中就可以看到计数器了（有没有计数器还得看子任务是什么，如果是collect，显然是不会有的）。<br><figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="comment">//有名计数器</span></span><br><span class="line"><span class="function"><span class="keyword">val</span> <span class="title">logLinesAcc</span> =</span> sc.accumulator(<span class="number">0</span>f, <span class="string">"（当日）日志输入"</span>)</span><br><span class="line"><span class="comment">//使用</span></span><br><span class="line">logLineAcc += <span class="number">1.5</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="最后">最后</h3><p>　　有一点写一点，足够长就再开一篇…这个样式真的要调了，好丑！</p>
+
+        
+      </div>
+      <footer>
+        
+          
+  
+  <div class="categories">
+    <a href="/categories/Spark/">Spark</a>
+  </div>
+
+          
+  
+  <div class="tags">
+    <a href="/tags/Scala/">Scala</a>, <a href="/tags/Spark/">Spark</a>
+  </div>
+
+          <div class="share">
+  
+
+    
+      <!-- JiaThis Button BEGIN -->
+      <div class="jiathis_style_24x24">
+        <a class="jiathis_button_qzone"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_tqq"></a>
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_renren"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+        </div>
+        <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js" charset="utf-8"></script>
+        <!-- JiaThis Button END -->
+    
+
+    
+
+    
+  
+</div>
+          
+<nav class="article-nav clearfix">
+ 
+ <div class="article-prev" >
+ <a href="/2015/03/spark-map-mapvalues/" title="Spark学习——map &amp; mapValues">
+  <i class="fa fa-long-arrow-left"></i>
+  <span>
+  Spark学习——map &amp; mapValues</span>
+</a>
+</div>
+
+
+<div class="article-next">
+<a href="/2014/12/scala-tips-01/"  title="Scala点点滴滴-JSON/正则/命令行解析">
+ <span>Scala点点滴滴-JSON/正则/命令行解析
+</span>
+<i class="fa fa-long-arrow-right"></i>
+</a>
+</div>
+
+</nav>
+
+        
+        <div class="clearfix"></div>
+      </footer>
+    </div>
+</article>
+
+
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+
+     <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2014/12/spark-tips-01/" data-title="Spark问题备忘" data-url="http://du00cs.github.com2014/12/spark-tips-01/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"du00cs"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright"><div class="padding">
+	
+	  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:du00cs.github.com">
+  </form>
+</div>
+	
+	  
+<div class="widget recent-post">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/spark-map-mapvalues/">Spark学习——map &amp; mapValues</a>
+      </li>
+    
+      <li>
+        <a href="/2014/12/spark-tips-01/">Spark问题备忘</a>
+      </li>
+    
+      <li>
+        <a href="/2014/12/scala-tips-01/">Scala点点滴滴-JSON/正则/命令行解析</a>
+      </li>
+    
+      <li>
+        <a href="/2014/11/hexo-github-pages-3/">利用GitHub搭建个人博客-美化(3)</a>
+      </li>
+    
+      <li>
+        <a href="/2014/11/hexo-github-pages-2/">利用GitHub搭建个人博客-利其器(2)</a>
+      </li>
+    
+  </ul>
+</div>
+
+	
+	  
+<div class="widget category">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Java/">Java</a><small>1</small></li>
+  
+    <li><a href="/categories/Scala/">Scala</a><small>1</small></li>
+  
+    <li><a href="/categories/Spark/">Spark</a><small>3</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/杂谈/">杂谈</a><small>1</small></li>
+  
+    <li><a href="/categories/笔记/">笔记</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+	
+	  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  
+    <a href="/tags/Coursera/">Coursera<small>1</small></a>
+  
+    <a href="/tags/Java/">Java<small>1</small></a>
+  
+    <a href="/tags/Scala/">Scala<small>6</small></a>
+  
+    <a href="/tags/Spark/">Spark<small>3</small></a>
+  
+    <a href="/tags/hexo/">hexo<small>3</small></a>
+  
+    <a href="/tags/杂谈/">杂谈<small>1</small></a>
+  
+</div>
+
+	
+</div></aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="padding">
+	<div class="alignleft">
+	  
+	  &copy; 2015 Du00
+	  
+	  Powerd by <a href="http://hexo.io/" target="_blank">hexo</a>
+	  and Theme by <a href="https://github.com/halfer53/metro-light" target="_blank">metro-light</a>
+	</div>
+
+	<div class="alignright">
+		
+		
+			<a href="https://github.com/du00cs" target="_blank" title="Du00 Github"><i class="fa fa-github-square"></i></a>	
+		
+		
+		
+			<a href="http://www.weibo.com/du00cs" target="_blank" title="Du00 Weibo"><i class="fa fa-weibo"></i></a>	
+		
+		
+		
+		
+	</div>
+
+	<div class="clearfix"></div>
+</div>
+
+<div class="scroll-top"><i class="fa fa-arrow-circle-up"></i></div></footer>
+  
+
+ <script type="text/javascript">
+var duoshuoQuery = {short_name:"du00cs"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.0.4/jquery.imagesloaded.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<script type="text/javascript">
+$(window).scroll(function() {
+
+    if($(this).scrollTop() > 400) {
+        $('.scroll-top').fadeIn(200);
+    } else {
+        $('.scroll-top').fadeOut(200);
+    }
+});
+
+$('.scroll-top').bind('click', function(e) {
+    e.preventDefault();
+    $('body,html').animate({scrollTop:0},200);
+});
+</script>
+
+
+</body>
+</html>

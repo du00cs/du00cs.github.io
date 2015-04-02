@@ -1,0 +1,428 @@
+<!DOCTYPE HTML>
+
+    <html lang="zh-Hans">
+  
+<head>
+  <meta charset="utf-8">
+  
+  <title>利用GitHub搭建个人博客-利其器(2) | Oh Captain, My Captain - Du00</title>
+  <meta name="author" content="Du00">
+  
+  <meta name="description" content="Du00的博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="利用GitHub搭建个人博客-利其器(2)"/>
+  <meta property="og:site_name" content="Oh Captain, My Captain - Du00"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <meta http-equiv="Content-Language" content="zh-Hans"/>
+  
+
+  <link href="/img/favicon.png" rel="icon">
+  
+    <link rel="apple-touch-icon" href="/img/apple-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/apple-icon.png">
+    
+
+  <link rel="alternate" href="/atom.xml" title="Oh Captain, My Captain - Du00" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+  <style type="text/css">
+  /* Tim Pietrusky advanced checkbox hack (Android <= 4.1.2) */
+body{ -webkit-animation: bugfix infinite 1s; }
+@-webkit-keyframes bugfix { from {padding:0;} to {padding:0;} }
+
+  
+  <!-- Chinese readability improvements -->
+    article {font-weight: 400;letter-spacing: .01rem;}
+    article .entry{line-height:2;}
+  
+
+  
+    article .post-content-index .entry{ overflow:hidden;}
+  
+</style>
+
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56718947-1', 'auto');
+  ga('send', 'pageview');
+ 
+</script>
+
+
+
+
+  
+    <!-- 360 Font and Baidu CDN in China -->
+    
+      <link href='http://fonts.useso.com/css?family=Open+Sans:300,400|Playball' rel='stylesheet' type='text/css'>
+    
+  <link href='http://apps.bdimg.com/libs/fontawesome/4.1.0/css/font-awesome.css' rel='stylesheet' type='text/css'>
+  <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+  
+
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="padding">
+	<div class="alignleft logo">
+	  <h1><a href="/">Oh Captain, My Captain - Du00</a></h1>
+	</div>
+	<nav id="main-nav" class="alignright">
+		<input type="checkbox" id="toggle" />
+		<label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu" onclick><i class="fa fa-bars"></i></label>
+	  <ul class="menu">
+	    
+	      <li><a href="/">Home</a></li>
+	    
+	      <li><a href="/archives">Archives</a></li>
+	    
+	    
+	  </ul>
+	</nav>
+	<div class="clearfix"></div>
+</div>
+</header>
+  <div id="page-heading-wrap">
+  	<div class="inner">
+      <div class="padding">
+    		
+          <h1>利用GitHub搭建个人博客-利其器(2)</h1>
+          <ul>
+            <li>
+              <span class="heading-span">Posted on: </span>
+              <time datetime="2014-11-22T05:31:00.000Z">2014-11-22</time>
+            </li>
+            
+              <li>
+                <span class="heading-span">By: </span>
+
+                
+                  <a href="/">Du00</a>
+                
+
+              </li>
+            
+            <li>
+              <span class="heading-span">With: </span>
+              
+
+                <a href="#ds-thread"><span class="ds-thread-count" data-thread-key="2014/11/hexo-github-pages-2/" data-count-type="comments"></span></a>
+              
+            </li>
+          </ul>
+        
+      </div>
+  	</div>
+  </div>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper" class="padding"><article class="post">
+  
+  
+    <div class="post-content">
+  
+      
+      <div class="entry">
+        
+          <p>　　工欲善其事，必先利其器。话虽然是这么说，但是在接触新事务的时候往往是相反的——先发现事情比较有意义，做着做着发现是不是做得太傻了，然后再发现其实运用某些工具可以让事情开展得更舒服。经历过这一过程的人来讲东西怎么用一般还是会把故事倒过来讲的。<br>　　搭建博客的工具的调整主要还是在工具的微调上，具体说来有几点：</p>
+<ol>
+<li>掌握hexo的基本命令，这个一看就懂，无非就是创建文章、生成页面、预览和发布;</li>
+<li>（可选，推荐）安装Atom并配置Markdown Writer</li>
+<li>（可选，推荐）用github来跟踪blog的源文件</li>
+</ol>
+<p>　　<em>Linux/Mac OSX中配置这些简直是太简单了，只有Windows才会有各种麻烦。</em></p>
+<h2 id="1-_hexo相关命令">1. hexo相关命令</h2><p>　　以下均是在命令行中进行的</p>
+<h3 id="1-1_创建文章">1.1 创建文章</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">hexo new [layout] title</span><br></pre></td></tr></table></figure>
+<p>　　layout不写默认就是post，会在<code>source/_posts</code>中创建以title命名的文件title.md，整个写博客的过程就是编辑符合markdown规范的文本。这也是hexo/jeklly号称能够让用户更专注的内容生产的原因。<br>　　即将发布的文章layout为post没有问题，但是也如果修改了一篇需要重新发布，而另外一篇才写了一半，这时就需要做些区分了。这时可以选layout为draft，文件就会被放到<code>source/_draft</code>中，在生成页面时会忽略这个目录，最后再文章完成之后再拖动文件到_posts中或者<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">hexo publish [layout] &lt;filename&gt;</span><br></pre></td></tr></table></figure></p>
+<p>就可以了。</p>
+<h3 id="1-2_生成页面">1.2 生成页面</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">hexo clean <span class="comment">#如果觉得页面比较诡异，这个命令将清除生成的页面</span></span><br><span class="line">hexo generate <span class="comment">#生成页面，生成的文件位于.deploy下</span></span><br><span class="line">hexo g <span class="comment">#g是generate的缩写，事实上以后基本上不会去用上一条</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-3_本地预览">1.3 本地预览</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">hexo server <span class="comment"># 启用本地预览，在localhost:4000可以访问到</span></span><br><span class="line">hexo s <span class="comment">#server的缩写</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-4_文章发布">1.4 文章发布</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">hexo deploy <span class="comment">#部署站点，实际上是将生成的页面git push到GitHub的Repository中</span></span><br><span class="line">hexo d <span class="comment">#缩写</span></span><br></pre></td></tr></table></figure>
+<p>　　掌握这部分已经可以完完全全开始了，但是总有一些其它的工具让你更写起来更爽、更舒服。这些工具往往是先行者们给予我们的便利，不必客气。君子生非异也，善假于物也。</p>
+<h2 id="2-_Atom编辑器与Markdown_Writer">2. Atom编辑器与Markdown Writer</h2><p>　　首先选用一个好的支持Markdown编辑器还是非常有必要的，虽然说你完全可以用记事本/gedit来折磨自己，但是方便一点我想也是没有人反对的。在我眼中一个好的Markdown编辑器包括以下几个方面：</p>
+<ol>
+<li>文章支持实时/半实时预览（如果使用记事本，你就需要开启hexo s然后刷网页来看效果了）；</li>
+<li>支持语法至少与GitHub一致，比如```的代码块要支持指定语言，否则那高亮完全就是来糊弄人的；</li>
+<li>支持Mathjax（如果不需要写公式则可以忽略）</li>
+</ol>
+<p>　　<a href="2014/11/22/利用GitHub搭建个人博客-工具准备/index.html">安装Atom</a>已经在前面介绍过了，是利用的Chocolatey。安装<a href="https://github.com/zhuochun/md-writer" target="_blank" rel="external">Markdown Writer</a>插件是通过<code>ctrl+,</code>来调出<code>settings</code>，在<code>pacakges</code>中搜索<code>markdown writer</code>，然后选择安装。这时Atom会提示一些错误（Mac上没有错误，估计Linux上也没有），如果你按照它的提示去安装VS Studio/Python等等东西的话，这日子真就没法过了，就那个VS Studio Express就有6G多。还好，没那那么麻烦，既然提示node-gyp不存在，那就用npm装一个好了。<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm install node-gyp</span><br></pre></td></tr></table></figure></p>
+<p>然后再点安装就可以搞定了。这个插件提供了很多markdown写作的快捷键，比如<code>ctrl+B</code>加粗、<code>ctrl+I</code>变斜体，插入图片则会给你弹一个窗口出来，确实是很方便。这里需要提一下的是Atom编辑器把所有的命令都放在了一个可以搜索的框内，直接输单词就可以调出某个功能，并不一定需要你去记某某某是什么什么快捷键。比如插入图片可以直接用<code>ctrl+shift+p</code>来调出一个窗口，然后输入<code>insert image</code>，回车或选择一个就可以调出插入图片的对话框。<br><img src="http://du00.qiniudn.com/2014/11/命令输入面板-insert_im.png" alt="命令输入面板-输入insert im(age)"><br>　　上面是markdown方面的便捷功能，markdown writer还提供了与hexo/jeklly工作目录连接的功能，完成连接首先需要利用一个插件来生成它所需要的三个json文件：<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#进入blog目录</span></span><br><span class="line">e:</span><br><span class="line"><span class="built_in">cd</span> e:/blog</span><br><span class="line">npm install --save hexo-generator-atom-markdown-writer-meta</span><br><span class="line">hexo g <span class="comment">#这时可以看到生成文件里面多了三个json文件了</span></span><br><span class="line">hexo d <span class="comment">#布署</span></span><br></pre></td></tr></table></figure></p>
+<p>　　配置与hexo的连接在<strong>Settings-&gt;Filter Packages-&gt;输入Markdown Writer</strong>在右侧的Settings中写入如下类似的东西即可：<br><img src="http://du00.qiniudn.com/2014/11/markdown_writer的hexo设置.png" alt="插入图片-Markdown Writer连接hexo工作目录"><br>这里实际上是在修改<code>~/.atom/packages\markdown-writer\lib\config.coffee</code>文件，可以打开看一看。<br>　　配置完成之后创建文章就可以不通过hexo命令了，在万能的<code>ctrl+shift+p</code>中输入<code>new post</code>或者<code>new draft</code>就可以生成新的文章了。不过这个功能目前还是有些问题，文件名生成有些障碍，需要手工修改一下文件名。</p>
+<h2 id="3-_GitHub管理站点生成代码/源文件">3. GitHub管理站点生成代码/源文件</h2><p>　　简单地说就是把blog目录交给git管理，当然这里面要去掉一些没必要提交的。比如：.deploy目录，这里面的内容是可以通过<code>hexo g</code>生成的：node_modules目录，这里的东西是由<code>npm install</code>得到的。可以确认blog目录下是否有.gitignore文件并且内容包含以下部分：</p>
+<blockquote>
+<p>.DS_Store<br>Thumbs.db<br>db.json<br>debug.log<br>node_modules/<br>public/<br>.deploy/</p>
+</blockquote>
+<p>有几点需要注意：</p>
+<ol>
+<li>themes中如果包含了从git上拉下的主题，需要去主题目录下删掉.git文件夹，这样才能完成同步（如果不确定可以去GitHub的Repository中查看是否有主题）；</li>
+<li>从GitHub上拉下来的blog目录需要运行一次<code>npm install</code>安装需要的模块，否则是没法正常生成网页的；</li>
+<li>记得推送……git push，否则神也帮不了你  </li>
+</ol>
+<p>　　为什么不用云盘/同步盘来做这件事？因为需要同步的有效内容非常少（比如修改了两行，那么就只需要同步这两行的修改），而且同一个目录下还有很多文件不需要同步，尤其是.deploy文件夹下的那些东西，<code>hexo g</code>一次你就会看见云盘的同步图标就开始转了，这其实没有必要。当然了，用GitHub显得更程序员、更任性。</p>
+<p>下一步将是各种微调，是对感观上的增强，实际上来说也是最重要的部分，因为展示才是最重要的，上面这些只是为了更爽。</p>
+
+        
+      </div>
+      <footer>
+        
+          
+  
+  <div class="categories">
+    <a href="/categories/工具/">工具</a>
+  </div>
+
+          
+  
+  <div class="tags">
+    <a href="/tags/hexo/">hexo</a>
+  </div>
+
+          <div class="share">
+  
+
+    
+      <!-- JiaThis Button BEGIN -->
+      <div class="jiathis_style_24x24">
+        <a class="jiathis_button_qzone"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_tqq"></a>
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_renren"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+        </div>
+        <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js" charset="utf-8"></script>
+        <!-- JiaThis Button END -->
+    
+
+    
+
+    
+  
+</div>
+          
+<nav class="article-nav clearfix">
+ 
+ <div class="article-prev" >
+ <a href="/2014/11/hexo-github-pages-3/" title="利用GitHub搭建个人博客-美化(3)">
+  <i class="fa fa-long-arrow-left"></i>
+  <span>
+  利用GitHub搭建个人博客-美化(3)</span>
+</a>
+</div>
+
+
+<div class="article-next">
+<a href="/2014/11/hexo-github-pages-1/"  title="利用GitHub搭建个人博客-工具准备(1)">
+ <span>利用GitHub搭建个人博客-工具准备(1)
+</span>
+<i class="fa fa-long-arrow-right"></i>
+</a>
+</div>
+
+</nav>
+
+        
+        <div class="clearfix"></div>
+      </footer>
+    </div>
+</article>
+
+
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+
+     <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2014/11/hexo-github-pages-2/" data-title="利用GitHub搭建个人博客-利其器(2)" data-url="http://du00cs.github.com2014/11/hexo-github-pages-2/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"du00cs"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright"><div class="padding">
+	
+	  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:du00cs.github.com">
+  </form>
+</div>
+	
+	  
+<div class="widget recent-post">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/spark-map-mapvalues/">Spark学习——map &amp; mapValues</a>
+      </li>
+    
+      <li>
+        <a href="/2014/12/spark-tips-01/">Spark问题备忘</a>
+      </li>
+    
+      <li>
+        <a href="/2014/12/scala-tips-01/">Scala点点滴滴-JSON/正则/命令行解析</a>
+      </li>
+    
+      <li>
+        <a href="/2014/11/hexo-github-pages-3/">利用GitHub搭建个人博客-美化(3)</a>
+      </li>
+    
+      <li>
+        <a href="/2014/11/hexo-github-pages-2/">利用GitHub搭建个人博客-利其器(2)</a>
+      </li>
+    
+  </ul>
+</div>
+
+	
+	  
+<div class="widget category">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Java/">Java</a><small>1</small></li>
+  
+    <li><a href="/categories/Scala/">Scala</a><small>1</small></li>
+  
+    <li><a href="/categories/Spark/">Spark</a><small>3</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/杂谈/">杂谈</a><small>1</small></li>
+  
+    <li><a href="/categories/笔记/">笔记</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+	
+	  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  
+    <a href="/tags/Coursera/">Coursera<small>1</small></a>
+  
+    <a href="/tags/Java/">Java<small>1</small></a>
+  
+    <a href="/tags/Scala/">Scala<small>6</small></a>
+  
+    <a href="/tags/Spark/">Spark<small>3</small></a>
+  
+    <a href="/tags/hexo/">hexo<small>3</small></a>
+  
+    <a href="/tags/杂谈/">杂谈<small>1</small></a>
+  
+</div>
+
+	
+</div></aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="padding">
+	<div class="alignleft">
+	  
+	  &copy; 2015 Du00
+	  
+	  Powerd by <a href="http://hexo.io/" target="_blank">hexo</a>
+	  and Theme by <a href="https://github.com/halfer53/metro-light" target="_blank">metro-light</a>
+	</div>
+
+	<div class="alignright">
+		
+		
+			<a href="https://github.com/du00cs" target="_blank" title="Du00 Github"><i class="fa fa-github-square"></i></a>	
+		
+		
+		
+			<a href="http://www.weibo.com/du00cs" target="_blank" title="Du00 Weibo"><i class="fa fa-weibo"></i></a>	
+		
+		
+		
+		
+	</div>
+
+	<div class="clearfix"></div>
+</div>
+
+<div class="scroll-top"><i class="fa fa-arrow-circle-up"></i></div></footer>
+  
+
+ <script type="text/javascript">
+var duoshuoQuery = {short_name:"du00cs"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.0.4/jquery.imagesloaded.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<script type="text/javascript">
+$(window).scroll(function() {
+
+    if($(this).scrollTop() > 400) {
+        $('.scroll-top').fadeIn(200);
+    } else {
+        $('.scroll-top').fadeOut(200);
+    }
+});
+
+$('.scroll-top').bind('click', function(e) {
+    e.preventDefault();
+    $('body,html').animate({scrollTop:0},200);
+});
+</script>
+
+
+</body>
+</html>
